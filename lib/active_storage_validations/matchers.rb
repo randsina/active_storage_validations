@@ -22,7 +22,7 @@ module ActiveStorageValidations
     end
 
     def self.mock_metadata(attachment, width, height)
-      if Rails::VERSION::MAJOR >= 6
+      if ActiveStorage.version >= Gem::Version.new('6')
         # Mock the Metadata class for rails 6
         mock = OpenStruct.new(metadata: { width: width, height: height })
         stub_method(ActiveStorageValidations::Metadata, :new, mock) do

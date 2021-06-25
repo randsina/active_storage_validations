@@ -22,7 +22,7 @@ module ActiveStorageValidations
 
     def files_count_valid?(count)
       if options[:max].present? && options[:min].present?
-        count >= options[:min] && count <= options[:max]
+        count.between?(options[:min], options[:max])
       elsif options[:max].present?
         count <= options[:max]
       elsif options[:min].present?

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'metadata.rb'
+require_relative 'metadata'
 
 module ActiveStorageValidations
   class DimensionValidator < ActiveModel::EachValidator # :nodoc
@@ -27,14 +27,12 @@ module ActiveStorageValidations
       super
     end
 
-
     def check_validity!
       return true if AVAILABLE_CHECKS.any? { |argument| options.key?(argument) }
       raise ArgumentError, 'You must pass either :width, :height, :min or :max to the validator'
     end
 
-
-    if Rails::VERSION::MAJOR >= 6
+    if ActiveStorage.version >= Gem::Version.new('6')
       def validate_each(record, attribute, _value)
         return true unless record.send(attribute).attached?
 

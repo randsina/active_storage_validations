@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'metadata.rb'
+require_relative 'metadata'
 
 module ActiveStorageValidations
   class AspectRatioValidator < ActiveModel::EachValidator # :nodoc
@@ -18,7 +18,7 @@ module ActiveStorageValidations
       raise ArgumentError, 'You must pass "aspect_ratio: :OPTION" option to the validator'
     end
 
-    if Rails::VERSION::MAJOR >= 6
+    if ActiveStorage.version >= Gem::Version.new('6')
       def validate_each(record, attribute, _value)
         return true unless record.send(attribute).attached?
 
@@ -37,14 +37,14 @@ module ActiveStorageValidations
       # Rails 5
       def validate_each(record, attribute, _value)
         return true unless record.send(attribute).attached?
-  
+
         files = Array.wrap(record.send(attribute))
-  
+
         files.each do |file|
           # Analyze file first if not analyzed to get all required metadata.
           file.analyze; file.reload unless file.analyzed?
           metadata = file.metadata
-  
+
           next if is_valid?(record, attribute, metadata)
           break
         end
